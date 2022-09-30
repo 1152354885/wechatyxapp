@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="com.me.test.mapper.SecondReplyMapper">
+        <delete id="deleteSecondReply" parameterType="Integer">
+            delete from wechat.second_reply
+            where sec_reply_id = #{sec_reply_id};
+        </delete>
+        <!--    查询回复我的回复-->
+    <resultMap id="getMySecondReplyByOpenidMap" type="SecondReply">
+        <id column="sec_reply_id" property="sec_reply_id"></id>
+        <result column="sec_comments" property="sec_comments"></result>
+        <result column="master_replyopenid" property="master_replyopenid"></result>
+        <result column="sec_reply_time" property="sec_reply_time"></result>
+        <result column="sec_name" property="sec_name"></result>
+        <result column="sec_avatar" property="sec_avatar"></result>
+        <result column="actid"  property="actid"></result>
+        <result column="master_replyid" property="master_replyid"></result>
+        <result column="sec_reply_openid" property="sec_reply_openid"></result>
+             <association property="reply" javaType="Reply">
+                 <id column="reply_id" property="reply_id"></id>
+                 <result column="comments" property="comments"></result>
+                 <result column="reply_openid" property="reply_openid"></result>
+                 <result column="master_openid" property="master_openid"></result>
+                 <result column="reply_time" property="reply_time"></result>
+                 <result column="name" property="name"></result>
+                 <result column="avatar" property="avatar"></result>
+                 <result column="act_id" property="act_id"></result>
+             </association>
+    </resultMap>
+
+        <select id="getMySecondReplyByOpenid" resultMap="getMySecondReplyByOpenidMap">
+            select s.*,r.comments from second_reply s left join reply r
+             on  s.master_replyid = r.reply_id   where master_replyopenid = #{master_replyopenid};
+
+        </select>
+<!--    新增子评论-->
+    <insert id="addSecondReply" parameterType="secondReply">
+        insert into wechat.second_reply (actid,sec_comments,master_replyopenid,sec_name,master_replyid,sec_reply_openid,sec_avatar)
+        values (#{actid},#{sec_comments},#{master_replyopenid},#{sec_name},#{master_replyid},#{sec_reply_openid},#{sec_avatar});
+    </insert>
+
+
+
+</mapper>

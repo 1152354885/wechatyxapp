@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.me.test.mapper.WxUserMapper">
+
+    <insert id="addWxUser" parameterType="WxUser">
+        insert into wechat.wx_user (open_id,session_key,skey,last_visit_time,create_time, city, province, country, avatar_url, gender, nick_name)
+         value (#{open_id},#{session_key},#{skey},#{last_visit_time},#{create_time},#{city},#{province},#{country},#{avatar_url},#{gender},#{nick_name});
+
+    </insert>
+
+
+    <select id="queryWxUserById" resultType="WxUser">
+        select * from wechat.wx_user
+        where open_id=#{open_id}
+    </select>
+
+    <select id="queryWxUserByIdTwo" resultType="WxUser">
+        select w.motto,w.age ,w.city ,w.country ,w.gender,w.province ,w.phone  from wechat.wx_user w
+        where open_id=#{open_id}
+    </select>
+
+    <update id="updateWxUser" parameterType="WxUser" >
+        update wechat.wx_user
+        set skey = #{skey},last_visit_time = #{last_visit_time}
+
+        where open_id=#{open_id};
+    </update>
+
+<!-- 个人主页查询,先查询用户表,再根据openid查询活动表-->
+    <resultMap id="queryWxUserAndActivityByStep" type="WxUser">
+        <id column="open_id" property="open_id"></id>
+        <result column="session_key" property="session_key"></result>
+        <result column="skey" property="skey"></result>
+        <result column="last_visit_time" property="last_visit_time"></result>
+        <result column="create_time" property="create_time"></result>
+        <result column="city" property="city"></result>
+        <result column="province" property="province"></result>
+        <result column="country" property="country"></result>
+        <result column="avatar_url" property="avatar_url"></result>
+        <result column="gender" property="gender"></result>
+        <result column="nick_name" property="nick_name"></result>
+        <result column="age" property="age"></result>
+        <result column="phone" property="phone"></result>
+        <result column="motto" property="motto"></result>
+<!--后期注意添加字段-->
+        <collection property="actiVities" fetchType="eager"
+                    select="com.me.test.mapper.ActiVityMapper.queryByOpenId"
+                    column="open_id"></collection>
+    </resultMap>
+
+    <select id="queryWxUserAndActivityByOpenID" resultMap="queryWxUserAndActivityByStep">
+        select * from wechat.wx_user
+        where open_id=#{open_id}
+    </select>
+
+   <update id="EditWxUser" parameterType="WxUser" >
+       update wechat.wx_user
+       set city=#{city}, province=#{province}, country=#{country},gender = #{gender},motto=#{motto},age = #{age},phone = #{phone}
+       where open_id=#{open_id};
+   </update>
+
+</mapper>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.me.test.mapper.UserInfoMapper">
+
+    <insert id="add" parameterType="Userinfo">
+        insert into metest.userinfo  (username,password)
+        values (#{username},#{password});
+    </insert>
+
+    <delete id="delete" parameterType="Integer">
+        delete from metest.userinfo where id = #{id};
+    </delete>
+
+    <update id="update" parameterType="Userinfo">
+        update metest.userinfo set username=#{username},password=#{password}
+        where id=#{id};
+    </update>
+
+    <select id="queryById" parameterType="Integer" resultType="Userinfo">
+        select * from metest.userinfo where id=#{id};
+    </select>
+
+    <select id="queryAll" resultType="Userinfo">
+        select * from metest.userinfo  ;
+    </select>
+
+    <select id="selectUser" parameterType="Userinfo" resultType="Userinfo">
+        select * from metest.userinfo where username=#{username} and password=#{password}
+    </select>
+
+
+</mapper>

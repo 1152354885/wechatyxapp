@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="com.me.test.mapper.ApplyMapper">
+
+    <select id="queryByActId" parameterType="Integer" resultType="Apply">
+       select * from wechat.apply
+                where act_id=#{id};
+    </select>
+<!--      Core为拼接生成的唯一标识-->
+    <select id="queryByApplyCore" parameterType="String" resultType="Apply">
+        select * from wechat.apply
+        where apply_core=#{apply_core};
+    </select>
+
+      <update id="updateStateById" parameterType="Apply" >
+            update wechat.apply
+            set states = #{states}, agree_time= #{agree_time}
+            where apply_id=#{apply_id};
+      </update>
+
+
+    <update id="updateCheckById" parameterType="Integer" >
+        update wechat.apply
+        set chek = 1
+        where apply_id=#{apply_id};
+    </update>
+
+    <resultMap id="getApplyAndWxUserMap" type="Apply" >
+        <id column="apply_id" property="apply_id"></id>
+        <result column="master_openid" property="master_openid"></result>
+        <result column="apply_openid" property="apply_openid"></result>
+        <result column="application_time" property="application_time"></result>
+        <result column="agree_time" property="agree_time"></result>
+        <result column="act_time" property="act_time"></result>
+        <result column="act_id" property="act_id"></result>
+        <result column="apply_avatar" property="apply_avatar"></result>
+        <result column="message" property="message"></result>
+        <result column="apply_nickname" property="apply_nickname"></result>
+        <result column="states" property="states"></result>
+        <result column="chek" property="chek"></result>
+        <result column="apply_link" property="apply_link"></result>
+        <association property="wxUser" fetchType="eager"
+                     select="com.me.test.mapper.WxUserMapper.queryWxUserByIdTwo"
+                     column="apply_openid">
+        </association>
+
+    </resultMap>
+      <select id="queryByApplyId" resultMap="getApplyAndWxUserMap">
+          select * from wechat.apply
+            where  apply_id=#{apply_id};
+      </select>
+
+    <select id="addApply" parameterType="Apply">
+        INSERT INTO wechat.apply (apply_id, master_openid, apply_openid, application_time, agree_time, act_id, apply_avatar, apply_nickname, states,apply_core,message,apply_link)
+        values (#{apply_id},#{master_openid},#{apply_openid},#{application_time},#{agree_time},#{act_id},#{apply_avatar},#{apply_nickname}, #{states},#{apply_core},#{message},#{apply_link});
+    </select>
+<!--      别人申请我的-->
+    <resultMap id="getApplyAndActivityByStepMap" type="Apply">
+        <id column="apply_id" property="apply_id"></id>
+        <result column="master_openid" property="master_openid"></result>
+        <result column="apply_openid" property="apply_openid"></result>
+        <result column="application_time" property="application_time"></result>
+        <result column="agree_time" property="agree_time"></result>
+        <result column="act_time" property="act_time"></result>
+        <result column="act_id" property="act_id"></result>
+        <result column="apply_avatar" property="apply_avatar"></result>
+        <result column="apply_nickname" property="apply_nickname"></result>
+        <result column="states" property="states"></result>
+        <result column="message" property="message"></result>
+        <result column="chek" property="chek"></result>
+        <result column="apply_link" property="apply_link"></result>
+        <collection property="actiVity" fetchType="eager"
+                    select="com.me.test.mapper.ActiVityMapper.getApplyAndActivityByStepTwo"
+                    column="act_id"></collection>
+    </resultMap>
+
+    <select id="getApplyAndActivityByStep" resultMap="getApplyAndActivityByStepMap">
+        select * from wechat.apply
+        where master_openid = #{master_openid}  and ( states like concat('%',#{states1},'%') or states like concat('%',#{states2},'%') )
+        order by  application_time  desc;
+    </select>
+<!--                               先查我的申请再查活动-->
+    <resultMap id="getMyApplyAndActivityByStepMap" type="Apply">
+        <id column="apply_id" property="apply_id"></id>
+        <result column="master_openid" property="master_openid"></result>
+        <result column="apply_openid" property="apply_openid"></result>
+        <result column="application_time" property="application_time"></result>
+        <result column="agree_time" property="agree_time"></result>
+        <result column="act_time" property="act_time"></result>
+        <result column="act_id" property="act_id"></result>
+        <result column="apply_avatar" property="apply_avatar"></result>
+        <result column="apply_nickname" property="apply_nickname"></result>
+        <result column="states" property="states"></result>
+        <result column="message" property="message"></result>
+        <result column="chek" property="chek"></result>
+        <result column="apply_link" property="apply_link"></result>
+        <association property="actiVity" fetchType="eager"
+                    select="com.me.test.mapper.ActiVityMapper.getApplyAndActivityByStepTwo"
+                    column="act_id"></association>
+    </resultMap>
+
+    <select id="getMyApplyAndActivityByStep" resultMap="getMyApplyAndActivityByStepMap">
+        select * from wechat.apply
+        where apply_openid = #{apply_openid} and ( states like concat('%',#{states1},'%') or states like concat('%',#{states2},'%') )
+        order by  application_time  desc;
+    </select>
+<!--                      查询通过状态的活动联系方式  -->
+    <resultMap id="getSucceedApplyAndActivityByStepMap" type="Apply">
+        <id column="apply_id" property="apply_id"></id>
+        <result column="master_openid" property="master_openid"></result>
+        <result column="apply_openid" property="apply_openid"></result>
+        <result column="application_time" property="application_time"></result>
+        <result column="agree_time" property="agree_time"></result>
+        <result column="act_time" property="act_time"></result>
+        <result column="act_id" property="act_id"></result>
+        <result column="apply_avatar" property="apply_avatar"></result>
+        <result column="apply_nickname" property="apply_nickname"></result>
+        <result column="message" property="message"></result>
+        <result column="states" property="states"></result>
+        <result column="chek" property="chek"></result>
+        <result column="apply_link" property="apply_link"></result>
+        <association property="actiVity" fetchType="eager"
+                     select="com.me.test.mapper.ActiVityMapper.getSucceedApplyAndActivityByStepTwo"
+                     column="act_id"></association>
+    </resultMap>
+           <select id="getSucceedApplyAndActivityByStep" resultMap="getSucceedApplyAndActivityByStepMap">
+               select * from wechat.apply
+               where apply_id = #{apply_id}
+               order by  agree_time  desc;
+           </select>
+
+    <select id="applyNotice" resultType="Integer">
+        select  sum(apply.master_openid= #{openid} and apply.states=#{states}) FROM apply ;
+    </select>
+
+
+</mapper>
