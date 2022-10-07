@@ -1,9 +1,5 @@
 package com.me.test.controller;
 
-import ch.qos.logback.core.util.CachingDateFormatter;
-import com.alibaba.fastjson.JSON;
-import com.me.test.pojo.ActiVity;
-import com.me.test.pojo.PayMent;
 import com.me.test.pojo.SignIn;
 import com.me.test.service.SignInService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +18,7 @@ import java.util.List;
 public class SignInController {
     @Autowired
     private SignInService signInService;
-
+    
     //post请求
     //签到
     @PostMapping(value = "/signIn")
@@ -38,17 +34,16 @@ public class SignInController {
         int point = 10;
         int day = 1;
         if (signIn == null) {
-            SignIn newsign=new SignIn();
+            SignIn newsign = new SignIn();
             newsign.setOpen_id(openid);
             newsign.setLast_sign_time(date.format(formatter));//获取签到时间
             newsign.setPoints(point);
             newsign.setDays(day);
             signInService.add(newsign);
-          //对比日期字符串
-        } else if(today.equals(signIn.getLast_sign_time()) == true) {
-
+            //对比日期字符串
+        } else if (today.equals(signIn.getLast_sign_time()) == true) {
             return "已经签到啦！";
-        }else {
+        } else {
             System.out.println(today.equals(signIn.getLast_sign_time()));
             System.out.println("老用户");
             signIn.setLast_sign_time(date.format(formatter));//更新签到时间
@@ -56,23 +51,22 @@ public class SignInController {
             signIn.setPoints(signIn.getPoints() + point);
             signIn.setDays(signIn.getDays() + day);
             signInService.updateSignIn(signIn);
-
         }
-
+        
         return "签到OK";
     }
+    
     @GetMapping("/person")
     @ResponseBody
-    public String queryByOpenId(@RequestParam("open_id") String openid){
-        SignIn signIn=signInService.queryByOpenId(openid);
+    public Object queryByOpenId(@RequestParam("open_id") String openid) {
+        SignIn signIn = signInService.queryByOpenId(openid);
         System.out.println(signIn);
-        if (signIn != null ){
+        if (signIn != null) {
             List<SignIn> signInList = new ArrayList<>();
             signInList.add(signIn);
-            return JSON.toJSONString(signInList);
-        }else {
-
-            return  "新用户签到领好礼";
+            return signInList;
+        } else {
+            return "新用户签到领好礼";
         }
     }
 }

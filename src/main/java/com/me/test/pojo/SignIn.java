@@ -12,11 +12,8 @@ import lombok.Setter;
 //使用@NoArgsConstructor自动生成无参构造
 @NoArgsConstructor
 public class SignIn {
-
-    private  String open_id;
+    private String open_id;
     private Integer days;
-    private  Integer  points;
-    private  String last_sign_time;
-
-
+    private Integer points;
+    private String last_sign_time;
 }

@@ -1,14 +1,11 @@
 package com.me.test.controller;
+
 import com.alibaba.fastjson.JSON;
 import com.me.test.pojo.PayMent;
-
-
 import com.me.test.service.PayMentService;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,46 +21,48 @@ import java.util.List;
 public class PayMentController {
     @Autowired
     private PayMentService payMentService;
+    
     //Get请求
     @GetMapping(value = "queryAll")
-    //@ResponseBody 注释后表示放回的是字符串
     @ResponseBody
-    public String queryAll(){
+    public List<PayMent> queryAll() {
         List<PayMent> payMentList = payMentService.queryAll();
-        return JSON.toJSONString(payMentList);
+        return payMentList;
     }
+    
     //使用了RestFull风格
     @GetMapping("queryById/{id}")
     @ResponseBody
-    public String query(@PathVariable(value = "id")Integer id){
+    public List<PayMent> query(@PathVariable(value = "id") Integer id) {
         PayMent payMent = payMentService.queryById(id);
         List<PayMent> payMentList = new ArrayList<>();
         payMentList.add(payMent);
-        return JSON.toJSONString(payMentList);
+        return payMentList;
     }
+    
     //post请求
     //@RequestBody 表示接受请求的JSON格式的数据
     @PostMapping(value = "add")
     @ResponseBody
-    public String add(@RequestBody PayMent payMent){
-        System.out.println("添加"+payMent);
+    public String add(@RequestBody PayMent payMent) {
+        System.out.println("添加" + payMent);
         payMentService.add(payMent);
-        return "添加OK";
+        return "添加成功";
     }
-
+    
     @DeleteMapping(value = "Delete/{id}")
     @ResponseBody
-    public String delete(@PathVariable("id")Integer id){
+    public String delete(@PathVariable("id") Integer id) {
         payMentService.delete(id);
         return "删除成功";
     }
-
+    
     //Put请求
-   // @PostMapping(value = "update")
-   @PutMapping("update/{id}")
+    // @PostMapping(value = "update")
+    @PutMapping("update/{id}")
     @ResponseBody
-    public String update(@PathVariable("id")Integer id,
-                         @RequestBody PayMent payMent){
+    public String update(@PathVariable("id") Integer id,
+                         @RequestBody PayMent payMent) {
         payMent.setId(id);
         payMentService.update(payMent);
         return "修改成功";
@@ -79,5 +78,5 @@ public class PayMentController {
 //        return false;
 //    }
     //查询byOpenid
-
+    
 }

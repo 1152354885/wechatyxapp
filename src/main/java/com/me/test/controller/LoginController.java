@@ -38,9 +38,9 @@ import java.util.Map;
     @GetMapping(value = "queryAll")
     //@ResponseBody 注释后表示放回的是字符串
     @ResponseBody
-    public String queryAll(){
+    public List<UserInfo> queryAll(){
         List<UserInfo> userInfoList = userInfoService.queryAll();
-        return JSON.toJSONString(userInfoList);
+        return userInfoList;
     }
     @DeleteMapping(value = "Delete/{id}")
     @ResponseBody
