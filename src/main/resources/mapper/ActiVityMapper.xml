@@ -4,94 +4,105 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <!--        使用parameterType ：主要针对于将信息存入到数据库中-->
 <mapper namespace="com.me.test.mapper.ActiVityMapper">
-<!-- 查询所有  时间降序 -->
+    <!-- 查询所有  时间降序 -->
     <select id="queryAll" resultType="ActiVity">
-         select * from wechat.activity order by  publish_time  desc;
+        select *
+        from wechat.activity
+        order by publish_time desc;
     </select>
-<!--    删除byID-->
+    <!--    删除byID-->
     <delete id="delete" parameterType="Integer">
-        delete from wechat.activity where id = #{id};
+        delete
+        from wechat.activity
+        where id = #{id};
     </delete>
-<!--    新增一条活动-->
+    <!--    新增一条活动-->
     <insert id="add" parameterType="ActiVity">
-        insert into wechat.activity  (id,act_type,title, content, publish_time, act_addr, act_time, nick_name, avatar_url, open_id,link,detail_addr)
-        VALUES (#{id},#{act_type},#{title},#{content},#{publish_time},#{act_addr},#{act_time},#{nick_name},#{avatar_url},#{open_id},#{link},#{detail_addr});
+        insert into wechat.activity (id, act_type, title, content, publish_time, act_addr, act_time, nick_name,
+                                     avatar_url, open_id, link, detail_addr)
+        VALUES (#{id}, #{act_type}, #{title}, #{content}, #{publish_time}, #{act_addr}, #{act_time}, #{nick_name},
+                #{avatar_url}, #{open_id}, #{link}, #{detail_addr});
 
     </insert>
-<!--    编辑一条活动byID-->
+    <!--    编辑一条活动byID-->
     <update id="update" parameterType="ActiVity">
         update wechat.activity
-        set act_type=#{act_type},title = #{title}, content=#{content},act_addr=#{act_addr},act_time=#{act_time},publish_time=#{publish_time},detail_addr=#{detail_addr},link=#{link},collect_count=#{collect_count}
-        where id=#{id};
+        set act_type=#{act_type},
+            title = #{title},
+            content=#{content},
+            act_addr=#{act_addr},
+            act_time=#{act_time},
+            publish_time=#{publish_time},
+            detail_addr=#{detail_addr},
+            link=#{link},
+            collect_count=#{collect_count}
+        where id = #{id};
     </update>
-<!--    查询活动byid-->
+    <!--    查询活动byid-->
     <select id="queryById" parameterType="Integer" resultType="ActiVity">
-        select * from wechat.activity where id=#{id};
+        select *
+        from wechat.activity
+        where id = #{id};
     </select>
-<!--    一对多映射-->
-      <resultMap id="getActivityAndReplyMap" type="ActiVity">
-          <id column="id" property="id"></id>
-          <result column="act_type" property="act_type"></result>
-          <result column="title"  property="title"></result>
-          <result column="content" property="content"></result>
-          <result column="publish_time" property="publish_time"></result>
-          <result column="act_addr" property="act_addr"></result>
-          <result column="detail_addr" property="detail_addr"></result>
-          <result column="act_time" property="act_time"></result>
-          <result column="nick_name" property="nick_name"></result>
-          <result column="avatar_url" property="avatar_url"></result>
-          <result column="open_id" property="open_id"></result>
-          <result column="link" property="link"></result>
-          <result column="count" property="count"></result>
-          <result column="collect_count" property="collect_count"></result>
-           <collection property="replies" ofType="Reply" javaType="list">
-               <id column="reply_id" property="reply_id"></id>
-               <result column="comments" property="comments"></result>
-               <result column="reply_openid" property="reply_openid"></result>
-               <result column="master_openid" property="master_openid"></result>
-               <result column="reply_time" property="reply_time"></result>
-               <result column="name" property="name"></result>
-               <result column="avatar" property="avatar"></result>
-               <result column="act_id" property="act_id"></result>
-                  <collection property="secondReplies" ofType="SecondReply" javaType="list">
-                      <id column="sec_reply_id" property="sec_reply_id"></id>
-                      <result column="sec_comments" property="sec_comments"></result>
-                      <result column="master_replyopenid" property="master_replyopenid"></result>
-                      <result column="sec_reply_time" property="sec_reply_time"></result>
-                      <result column="sec_name" property="sec_name"></result>
-                      <result column="sec_avatar" property="sec_avatar"></result>
-                      <result column="actid"  property="actid"></result>
-                      <result column="master_replyid" property="master_replyid"></result>
-                      <result column="sec_reply_openid" property="sec_reply_openid"></result>
-                  </collection>
-           </collection>
-      </resultMap>
-<!--    后期字段名建议全打-->
-    <select id="getDetailAndReply" resultMap="getActivityAndReplyMap" >
-        SELECT * FROM
-            (
-                SELECT
-                    *
-                FROM
-                    activity a
-                        LEFT JOIN reply fc ON a.id = fc.act_id
-            ) tmp
-                LEFT JOIN second_reply sc ON tmp.reply_id = sc.master_replyid
-        WHERE
-            id = #{id}
-        order by  reply_time  desc;
+    <!--    一对多映射-->
+    <resultMap id="getActivityAndReplyMap" type="ActiVity">
+        <id column="id" property="id"></id>
+        <result column="act_type" property="act_type"></result>
+        <result column="title" property="title"></result>
+        <result column="content" property="content"></result>
+        <result column="publish_time" property="publish_time"></result>
+        <result column="act_addr" property="act_addr"></result>
+        <result column="detail_addr" property="detail_addr"></result>
+        <result column="act_time" property="act_time"></result>
+        <result column="nick_name" property="nick_name"></result>
+        <result column="avatar_url" property="avatar_url"></result>
+        <result column="open_id" property="open_id"></result>
+        <result column="link" property="link"></result>
+        <result column="count" property="count"></result>
+        <result column="collect_count" property="collect_count"></result>
+        <collection property="replies" ofType="Reply" javaType="list">
+            <id column="reply_id" property="reply_id"></id>
+            <result column="comments" property="comments"></result>
+            <result column="reply_openid" property="reply_openid"></result>
+            <result column="master_openid" property="master_openid"></result>
+            <result column="reply_time" property="reply_time"></result>
+            <result column="name" property="name"></result>
+            <result column="avatar" property="avatar"></result>
+            <result column="act_id" property="act_id"></result>
+            <collection property="secondReplies" ofType="SecondReply" javaType="list">
+                <id column="sec_reply_id" property="sec_reply_id"></id>
+                <result column="sec_comments" property="sec_comments"></result>
+                <result column="master_replyopenid" property="master_replyopenid"></result>
+                <result column="sec_reply_time" property="sec_reply_time"></result>
+                <result column="sec_name" property="sec_name"></result>
+                <result column="sec_avatar" property="sec_avatar"></result>
+                <result column="actid" property="actid"></result>
+                <result column="master_replyid" property="master_replyid"></result>
+                <result column="sec_reply_openid" property="sec_reply_openid"></result>
+            </collection>
+        </collection>
+    </resultMap>
+    <!--    后期字段名建议全打-->
+    <select id="getDetailAndReply" resultMap="getActivityAndReplyMap">
+        SELECT *
+        FROM (SELECT *
+              FROM activity a
+                       LEFT JOIN reply fc ON a.id = fc.act_id) tmp
+                 LEFT JOIN second_reply sc ON tmp.reply_id = sc.master_replyid
+        WHERE id = #{id}
+        order by reply_time desc;
 
     </select>
 
 
-
-<!--  查询活动by微信ID-->
+    <!--  查询活动by微信ID-->
     <select id="queryByOpenId" parameterType="String" resultType="ActiVity">
-        select * from wechat.activity
-        where open_id=#{open_id}
-        order by  publish_time  desc;
+        select *
+        from wechat.activity
+        where open_id = #{open_id}
+        order by publish_time desc;
     </select>
-<!--    模糊查询-->
+    <!--    模糊查询-->
     <select id="searchByKeyWord" parameterType="String" resultType="ActiVity">
         SELECT * FROM wechat.activity
 
@@ -104,33 +115,33 @@
             </if>
 
         </where>
-        order by  publish_time  desc;
+        order by publish_time desc;
     </select>
 
-    <select id="queryByConditionMap"  resultType="ActiVity">
+    <select id="queryByConditionMap" resultType="ActiVity">
         select *
         from wechat.activity
-       <where>
-        <if test="act_type!=null">
-            and  act_type like concat('%',#{act_type}, '%')
-        </if>
-        <if test="act_time !=null">
-            and  act_time=#{act_time}
-        </if>
-           <if test="act_addr !=null">
-               and  act_addr like concat('%',#{act_addr}, '%')
-           </if>
-       </where>
+        <where>
+            <if test="act_type!=null">
+                and act_type like concat('%',#{act_type}, '%')
+            </if>
+            <if test="act_time !=null">
+                and act_time=#{act_time}
+            </if>
+            <if test="act_addr !=null">
+                and act_addr like concat('%',#{act_addr}, '%')
+            </if>
+        </where>
 
     </select>
-<!--    批量删除，管理员用-->
+    <!--    批量删除，管理员用-->
     <delete id="batchDelete" parameterType="java.util.List">
-        delete  from wechat.activity where id in
-        <foreach collection="list"  open="(" close=")" separator=","  item="item">
+        delete from wechat.activity where id in
+        <foreach collection="list" open="(" close=")" separator="," item="item">
             #{item}
         </foreach>
     </delete>
-<!--        分布查询查申请者-->
+    <!--        分布查询查申请者-->
     <resultMap id="getActivityAndApplyByStep" type="ActiVity">
         <id column="id" property="id"></id>
         <result column="act_type" property="act_type"></result>
@@ -151,28 +162,31 @@
                     column="id"></collection>
     </resultMap>
 
-    <select id="getActivityAndApplyByStep"  resultMap="getActivityAndApplyByStep">
-        select * from wechat.activity
-        where open_id=#{open_id}
-        order by  publish_time  desc;
+    <select id="getActivityAndApplyByStep" resultMap="getActivityAndApplyByStep">
+        select *
+        from wechat.activity
+        where open_id = #{open_id}
+        order by publish_time desc;
     </select>
 
     <select id="getApplyAndActivityByStepTwo" resultType="ActiVity">
-        select id,act_type,content,nick_name,avatar_url,title,link from wechat.activity
-        where id=#{act_id};
+        select id, act_type, content, nick_name, avatar_url, title, link
+        from wechat.activity
+        where id = #{act_id};
 
     </select>
-<!--                               查询联系方式-->
+    <!--                               查询联系方式-->
     <select id="getSucceedApplyAndActivityByStepTwo" resultType="actiVity">
-        select link from wechat.activity
-        where id=#{act_id} ;
+        select link
+        from wechat.activity
+        where id = #{act_id};
     </select>
 
-<!--  查活动和关注我活动的人-->
+    <!--  查活动和关注我活动的人-->
     <resultMap id="getWhoFollowMeMap" type="ActiVity">
         <id column="id" property="id"></id>
         <result column="act_type" property="act_type"></result>
-        <result column="title"  property="title"></result>
+        <result column="title" property="title"></result>
         <result column="content" property="content"></result>
         <result column="publish_time" property="publish_time"></result>
         <result column="act_addr" property="act_addr"></result>
@@ -183,21 +197,23 @@
         <result column="open_id" property="open_id"></result>
         <result column="link" property="link"></result>
         <result column="collect_count" property="collect_count"></result>
-            <collection property="collects" ofType="Collect" javaType="list">
-                <id column="collect_id"  property="collect_id"></id>
-                <result column="act_id" property="act_id"></result>
-                <result column="openid" property="openid"></result>
-                <result column="nickname" property="nickname"></result>
-                <result column="avatar"   property="avatar"></result>
-                <result column="collect_time" property="collect_time"></result>
-                <result column="collectcore" property="collectcore"></result>
-            </collection>
+        <collection property="collects" ofType="Collect" javaType="list">
+            <id column="collect_id" property="collect_id"></id>
+            <result column="act_id" property="act_id"></result>
+            <result column="openid" property="openid"></result>
+            <result column="nickname" property="nickname"></result>
+            <result column="avatar" property="avatar"></result>
+            <result column="collect_time" property="collect_time"></result>
+            <result column="collectcore" property="collectcore"></result>
+        </collection>
     </resultMap>
-  <select id="getWhoFollowMe" parameterType="String" resultMap="getWhoFollowMeMap">
-      select collect.nickname, collect.avatar,activity.title,collect.openid,collect.collect_time
-      from activity left join collect on activity.id = collect.act_id
-      where activity.open_id =  #{open_id} and collect.nickname is not null
+    <select id="getWhoFollowMe" parameterType="String" resultMap="getWhoFollowMeMap">
+        select collect.nickname, collect.avatar, activity.title, collect.openid, collect.collect_time
+        from activity
+                 left join collect on activity.id = collect.act_id
+        where activity.open_id = #{open_id}
+          and collect.nickname is not null
 
-  </select>
+    </select>
 
 </mapper>

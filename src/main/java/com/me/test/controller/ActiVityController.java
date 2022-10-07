@@ -131,23 +131,10 @@ public class ActiVityController {
     public List<ActiVity> queryByConditionMap(@RequestParam(value = "act_type", required = false) String act_type,
                                               @RequestParam(value = "act_time", required = false) String act_time,
                                               @RequestParam(value = "act_addr", required = false) String act_addr) {
-        if (act_addr.length() != 0 & act_time.length() == 0 & act_type.length() == 0) {
-            act_time = null;
-            act_type = null;
-        } else if (act_addr.length() == 0 & act_time.length() != 0 & act_type.length() == 0) {
-            act_addr = null;
-            act_type = null;
-        } else if (act_addr.length() == 0 & act_time.length() == 0 & act_type.length() != 0) {
-            act_addr = null;
-            act_time = null;
-        } else if (act_addr.length() != 0 & act_time.length() == 0 & act_type.length() != 0) {
-            act_time = null;
-        } else if (act_addr.length() != 0 & act_time.length() != 0 & act_type.length() == 0) {
-            act_type = null;
-        } else if (act_addr.length() == 0 & act_time.length() != 0 & act_type.length() != 0) {
-            act_addr = null;
-        }
-        System.out.println("类型" + act_type + "时间" + act_time + "地址" + act_addr);
+        act_type = act_type.length() == 0 ? null : act_type;
+        act_time = act_time.length() == 0 ? null : act_time;
+        act_addr = act_addr.length() == 0 ? null : act_addr;
+//        System.out.println("类型" + act_type + "时间" + act_time + "地址" + act_addr);
         Map<String, Object> map = new HashMap<>();
         map.put("act_type", act_type);
         map.put("act_time", act_time);
@@ -155,7 +142,6 @@ public class ActiVityController {
         List<ActiVity> list = actiVityService.queryByConditionMap(map);
         System.out.println(list);
         return list;
-        
     }
     
     //先查活动再查申请
