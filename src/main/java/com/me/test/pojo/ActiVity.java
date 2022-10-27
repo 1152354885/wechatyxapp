@@ -25,6 +25,7 @@ public class ActiVity {
     private String open_id;//微信ID
     private String detail_addr;
     private String count;
+    private String image_url;
     private Integer  collect_count;
     private List<Reply> replies;
     private List<Apply> applies;

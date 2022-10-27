@@ -10,7 +10,7 @@ import java.util.List;
 @Repository
 @Mapper
 public interface ApplyMapper {
-  public String  queryByActId(Integer id);
+  Apply  queryByActId(Integer id);
 
   void  updateStateById(Apply apply);
 

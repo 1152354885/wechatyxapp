@@ -3,6 +3,8 @@ package com.me.test.controller;
 import com.alibaba.fastjson.JSON;
 import com.me.test.pojo.UserInfo;
 import com.me.test.service.UserInfoService;
+import org.apache.catalina.User;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,15 +26,16 @@ import java.util.Map;
         private UserInfoService userInfoService;
 
 
-        @RequestMapping("login")
-        public  boolean login (String username, String password){
-            System.out.println(username+password);
-            System.out.println ( "微信小程序调用接口！！！用户名:" + username + "密码:" + password );
-            boolean login = userInfoService.login ( username, password );
+        @PostMapping("/api/login")
+        @ResponseBody
+        public  String login ( @RequestBody User user){
+            System.out.println(user);
+            System.out.println ( "管理员调用接口！！！用户名:" + user.getUsername() + "密码:" + user.getPassword() );
+            boolean login = userInfoService.login ( user.getUsername(), user.getPassword() );
             if (login) {
-                return true;
+                return "登录成功";
             }
-            return false;
+            return "登录失败";
         }
 
     @GetMapping(value = "queryAll")

@@ -17,6 +17,7 @@
             <collection property="actiVities" ofType="ActiVity" javaType="list">
                 <id column="id" property="id"></id>
                 <result column="act_type" property="act_type"></result>
+                <result column="title" property="title"></result>
                 <result column="content" property="content"></result>
                 <result column="publish_time" property="publish_time"></result>
                 <result column="act_addr" property="act_addr"></result>
@@ -26,8 +27,8 @@
                 <result column="avatar_url" property="avatar_url"></result>
                 <result column="open_id" property="open_id"></result>
                 <result column="link" property="link"></result>
-                <result column="title" property="title"></result>
-                <result column="count" property="count"></result>
+                <result column="image_url" property="image_url"></result>
+                <result column="collect_count" property="collect_count"></result>
             </collection>
 </resultMap>
 

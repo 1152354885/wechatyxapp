@@ -6,29 +6,29 @@
 <mapper namespace="com.me.test.mapper.UserInfoMapper">
 
     <insert id="add" parameterType="Userinfo">
-        insert into metest.userinfo  (username,password)
+        insert into userinfo  (username,password)
         values (#{username},#{password});
     </insert>
 
     <delete id="delete" parameterType="Integer">
-        delete from metest.userinfo where id = #{id};
+        delete from userinfo where id = #{id};
     </delete>
 
     <update id="update" parameterType="Userinfo">
-        update metest.userinfo set username=#{username},password=#{password}
+        update userinfo set username=#{username},password=#{password}
         where id=#{id};
     </update>
 
     <select id="queryById" parameterType="Integer" resultType="Userinfo">
-        select * from metest.userinfo where id=#{id};
+        select * from userinfo where id=#{id};
     </select>
 
     <select id="queryAll" resultType="Userinfo">
-        select * from metest.userinfo  ;
+        select * from userinfo  ;
     </select>
 
     <select id="selectUser" parameterType="Userinfo" resultType="Userinfo">
-        select * from metest.userinfo where username=#{username} and password=#{password}
+        select * from userinfo where username=#{username} and password=#{password}
     </select>
 
 

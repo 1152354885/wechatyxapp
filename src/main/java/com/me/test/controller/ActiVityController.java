@@ -18,12 +18,12 @@ import java.util.Map;
 
 @RequestMapping(value = "/api/act")
 public class ActiVityController {
-    
+
     @Autowired
     private ActiVityService actiVityService;
     @Autowired
     private RedisUtil redisUtil;
-    
+
     //get 请求查询所有活动
     @GetMapping(value = "queryAll")
     @ResponseBody
@@ -31,7 +31,7 @@ public class ActiVityController {
         List<ActiVity> ActiVityList = actiVityService.queryAll();
         return ActiVityList;
     }
-    
+
     //查询byid带评论 两表联查
     @GetMapping("query/{id}")
     @ResponseBody
@@ -40,7 +40,7 @@ public class ActiVityController {
         List<ActiVity> actiVityList = new ArrayList<>();
         // redis 实现访问量
         boolean hasKey = redisUtil.hasKey(String.valueOf(id));
-        
+
         if (hasKey) {
             System.out.print("存在");
             redisUtil.incr(String.valueOf(id), 1);
@@ -48,14 +48,14 @@ public class ActiVityController {
             System.out.print("不存在");
             redisUtil.set(String.valueOf(id), 0);
             System.out.println("Redis及数据库初始化完毕");
-            
+
         }
         actiVity.setCount(String.valueOf(redisUtil.get(String.valueOf(id))));
         actiVityList.add(actiVity);
         System.out.println("访问量：" + redisUtil.get(String.valueOf(id)));
         return actiVityList;
     }
-    
+
     //删除byID 通过 @PathVariable 可以将 URL 中占位符参数绑定到控制器处理方法的入参中：
     @DeleteMapping(value = "delete/{id}")
     @ResponseBody
@@ -63,7 +63,7 @@ public class ActiVityController {
         actiVityService.delete(id);
         return "删除成功";
     }
-    
+
     //新增活动
     //post请求
     //@RequestBody 表示接受请求的JSON格式的数据
@@ -77,7 +77,7 @@ public class ActiVityController {
         actiVityService.add(actiVity);
         return "添加OK";
     }
-    
+
     //编辑一条活动
     //Put请求
     // @PostMapping(value = "update")
@@ -93,7 +93,7 @@ public class ActiVityController {
         actiVityService.update(actiVity);
         return "修改成功";
     }
-    
+
     //查询byopenid,用于我的发布
     @GetMapping("person/{open_id}")
     @ResponseBody
@@ -102,7 +102,7 @@ public class ActiVityController {
         //新建一个名字为actiVityList的数组列表，数组元素均由ActiVity类型数据组成。
         return actiVityList;
     }
-    
+
     //模糊查询by活动正文和活动类型和地址
     @GetMapping("/search")
     @ResponseBody
@@ -111,7 +111,7 @@ public class ActiVityController {
         List<ActiVity> ActiVityList = actiVityService.searchByKeyWord(keyword);
         return ActiVityList;
     }
-    
+
     //批量删除活动，后台管理员用
     @DeleteMapping(value = "/batchDelete")
     @ResponseBody
@@ -125,7 +125,7 @@ public class ActiVityController {
         actiVityService.batchDelete(list);
         return "ok";
     }
-    
+
     @GetMapping("/condition")
     @ResponseBody
     public List<ActiVity> queryByConditionMap(@RequestParam(value = "act_type", required = false) String act_type,
@@ -143,15 +143,8 @@ public class ActiVityController {
         System.out.println(list);
         return list;
     }
-    
-    //先查活动再查申请
-//    @PostMapping ("/apply")
-//    @ResponseBody
-//    public List<ActiVity> getActivityAndApplyByStep(@RequestParam(value="openid")String open_id){
-//
-//     List<ActiVity> actiVityList= actiVityService.getActivityAndApplyByStep(open_id);
-//        return actiVityList;
-//    }
+
+
     //查询谁收藏了我
     @GetMapping("/myfollowers")
     @ResponseBody
@@ -159,5 +152,5 @@ public class ActiVityController {
         List<ActiVity> actiVityList = actiVityService.getWhoFollowMe(open_id);
         return actiVityList;
     }
-    
+
 }
